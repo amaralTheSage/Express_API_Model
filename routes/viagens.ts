@@ -1,4 +1,5 @@
 import { PrismaClient, Transporte } from "@prisma/client";
+import { error } from "console";
 
 import express, { Router } from "express";
 import { Request, Response } from "express";
@@ -11,7 +12,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.get("/", async (req: Request, res: Response) => {
-  const viagens = await prisma.viagem.findMany();
+  const viagens = await prisma.viagem.findMany({ orderBy: { id: "desc" } });
 
   res.json(viagens);
 });
@@ -29,10 +30,10 @@ router.post("/create", async (req, res) => {
 
   const { destino, transporte, dataSaida, duracao, preco } = req.body;
 
-  !result && console.log("DEU PAU NA VALIDACAO");
-
-  if (!result) return;
-
+  if (!result) {
+    res.status(400).json({ error: "DEU PAU NA VALIDACAO" });
+    return;
+  }
 
   try {
     const viagem = await prisma.viagem.create({
