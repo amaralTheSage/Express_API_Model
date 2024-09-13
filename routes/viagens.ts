@@ -20,7 +20,7 @@ router.get("/", async (req: Request, res: Response) => {
 const viagensValidation = z.object({
   destino: z.string(),
   transporte: z.nativeEnum(Transporte),
-  dataSaida: z.string(),
+  dataSaida: z.string().date(),
   duracao: z.number(),
   preco: z.number(),
 });
