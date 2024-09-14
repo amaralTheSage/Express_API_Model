@@ -71,15 +71,16 @@ const viagensValidation = z.object({
 });
 
 // PREÇO MEDIO DAS VIAGENS
-router.get("/precoMedio", async (req: Request, res: Response) => {
+router.get("/media", async (req: Request, res: Response) => {
   //Método em si
-  const precoMedio = await prisma.viagem.aggregate({
+  const media = await prisma.viagem.aggregate({
     _avg: {
       preco: true,
+      duracao: true,
     },
   });
 
-  res.json(precoMedio);
+  res.json(media);
 });
 
 // STORE
