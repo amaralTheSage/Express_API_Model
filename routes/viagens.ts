@@ -38,20 +38,9 @@ router.get("/preco/:query", async (req: Request, res: Response) => {
   const viagem = await prisma.viagem.findMany({
     where: {
       preco: {
-        gte: Number(req.params.query),
+        lte: Number(req.params.query),
       },
     },
-  }); // FILTER PRECO
-  router.get("/preco/:query", async (req: Request, res: Response) => {
-    const viagem = await prisma.viagem.findMany({
-      where: {
-        preco: {
-          gte: Number(req.params.query),
-        },
-      },
-    });
-
-    res.json(viagem);
   });
 
   res.json(viagem);
@@ -79,6 +68,18 @@ const viagensValidation = z.object({
   preco: z.number(),
   hotel: z.string(),
   estrelas: z.number(),
+});
+
+// PREÇO MEDIO DAS VIAGENS
+router.get("/precoMedio", async (req: Request, res: Response) => {
+  //Método em si
+  const precoMedio = await prisma.viagem.aggregate({
+    _avg: {
+      preco: true,
+    },
+  });
+
+  res.json(precoMedio);
 });
 
 // STORE
