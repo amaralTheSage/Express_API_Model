@@ -18,8 +18,8 @@ router.get("/", async (req: Request, res: Response) => {
   res.json(viagens);
 });
 
-// FILTER
-router.get("/:query", async (req: Request, res: Response) => {
+// FILTER TRANSPORTE
+router.get("/transporte/:query", async (req: Request, res: Response) => {
   // Ou group by, com by: [<campos>]
 
   const viagens = await prisma.viagem.findMany({
@@ -31,6 +31,44 @@ router.get("/:query", async (req: Request, res: Response) => {
   });
 
   res.json(viagens);
+});
+
+// FILTER PRECO
+router.get("/preco/:query", async (req: Request, res: Response) => {
+  const viagem = await prisma.viagem.findMany({
+    where: {
+      preco: {
+        gte: Number(req.params.query),
+      },
+    },
+  }); // FILTER PRECO
+  router.get("/preco/:query", async (req: Request, res: Response) => {
+    const viagem = await prisma.viagem.findMany({
+      where: {
+        preco: {
+          gte: Number(req.params.query),
+        },
+      },
+    });
+
+    res.json(viagem);
+  });
+
+  res.json(viagem);
+});
+
+// FILTER PRECO
+router.get("/destinos", async (req: Request, res: Response) => {
+  const viagem = await prisma.viagem.findMany({
+    select: {
+      destino: true,
+      preco: true,
+      duracao: true,
+    },
+    orderBy: { destino: "asc" },
+  });
+
+  res.json(viagem);
 });
 
 const viagensValidation = z.object({
