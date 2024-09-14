@@ -20,6 +20,8 @@ model Viagem {
   dataSaida String
   preco Float
   duracao Int @db.SmallInt
+  hotel String @default("")
+  estrelas Int @default(0) @db.SmallInt
   @@map("viagens")
 }
 

@@ -57,7 +57,7 @@ router.get("/preco/:query", async (req: Request, res: Response) => {
   res.json(viagem);
 });
 
-// FILTER PRECO
+// DESTINOS EM ORDEM ALFABETICA
 router.get("/destinos", async (req: Request, res: Response) => {
   const viagem = await prisma.viagem.findMany({
     select: {
@@ -77,13 +77,16 @@ const viagensValidation = z.object({
   dataSaida: z.string().date(),
   duracao: z.number(),
   preco: z.number(),
+  hotel: z.string(),
+  estrelas: z.number(),
 });
 
 // STORE
 router.post("/create", async (req, res) => {
   const result = viagensValidation.safeParse(req.body);
 
-  const { destino, transporte, dataSaida, duracao, preco } = req.body;
+  const { destino, transporte, dataSaida, duracao, preco, hotel, estrelas } =
+    req.body;
 
   if (!result) {
     res.status(400).json({ error: "DEU PAU NA VALIDACAO" });
@@ -92,7 +95,7 @@ router.post("/create", async (req, res) => {
 
   try {
     const viagem = await prisma.viagem.create({
-      data: { destino, transporte, dataSaida, duracao, preco },
+      data: { destino, transporte, dataSaida, duracao, preco, hotel, estrelas },
     });
 
     res.status(201).json(viagem);
@@ -108,7 +111,6 @@ router.put("/update/:id", async function (req, res) {
   const { id } = req.params;
 
   const result = viagensValidation.safeParse(req.body);
-  const { destino, transporte, dataSaida, duracao, preco } = req.body;
 
   !result && console.log("DEU PAU NA VALIDACAO");
 
