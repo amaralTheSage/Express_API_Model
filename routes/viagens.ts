@@ -11,8 +11,24 @@ const router = Router();
 
 const prisma = new PrismaClient();
 
+// INDEX
 router.get("/", async (req: Request, res: Response) => {
   const viagens = await prisma.viagem.findMany({ orderBy: { id: "desc" } });
+
+  res.json(viagens);
+});
+
+// FILTER
+router.get("/:query", async (req: Request, res: Response) => {
+  // Ou group by, com by: [<campos>]
+
+  const viagens = await prisma.viagem.findMany({
+    where: {
+      transporte: {
+        equals: <Transporte>req.params.query.toUpperCase(),
+      },
+    },
+  });
 
   res.json(viagens);
 });
@@ -25,6 +41,7 @@ const viagensValidation = z.object({
   preco: z.number(),
 });
 
+// STORE
 router.post("/create", async (req, res) => {
   const result = viagensValidation.safeParse(req.body);
 
@@ -48,6 +65,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
+// PUT
 router.put("/update/:id", async function (req, res) {
   const { id } = req.params;
 
@@ -72,6 +90,7 @@ router.put("/update/:id", async function (req, res) {
   }
 });
 
+// DESTROY
 router.delete("/delete/:id", async function (req, res) {
   const { id } = req.params;
 
