@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:21-alpine
 
 WORKDIR /api
 
@@ -8,7 +8,9 @@ RUN npm install
 
 COPY . /api/
 
+RUN npx prisma generate
+
 EXPOSE 8000
 
-CMD [ "npm","run","dev" ]
+CMD ["npm","run","dev"]
 
