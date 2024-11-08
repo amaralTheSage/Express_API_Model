@@ -1,0 +1,16 @@
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD: "1234"
+      - MYSQL_DATABASE: "mysql.test"
+    ports:
+      - "3306:3306"
+          
