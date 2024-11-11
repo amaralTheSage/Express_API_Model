@@ -1,12 +1,9 @@
 import { PrismaClient, Transporte } from "@prisma/client";
-import { error } from "console";
 
 import express, { Router } from "express";
 import { Request, Response } from "express";
 import { z } from "zod";
 
-const app = express();
-const port = 3000;
 const router = Router();
 
 const prisma = new PrismaClient();

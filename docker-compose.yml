@@ -1,15 +1,33 @@
 services:
-  api:
-    build: .
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
   db:
     image: mysql
     restart: always
+    networks:
+      - flask_task_manager_network
     environment:
       MYSQL_ROOT_PASSWORD: "1234"
-      MYSQL_DATABASE: "mysql.node"
+      MYSQL_DATABASE: "API_Edecio"
     ports:
       - "3307:3306"
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    networks:
+      - flask_task_manager_network
+    depends_on:
+      wait-for-db:
+        condition: service_completed_successfully
+
+  wait-for-db:
+    container_name: flask_task_manager_health
+    image: atkrad/wait4x
+    networks:
+      - flask_task_manager_network
+    depends_on:
+      - db
+    command: tcp db:3307 -t 30s -i 250ms
+
+networks:
+  flask_task_manager_network:
